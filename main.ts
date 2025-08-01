@@ -37,33 +37,37 @@ namespace LedRing {
         displaySendBuffer(_buffer, _pin);
     }
 
-    export function setPixel(offset: number, red: number, green: number, blue: number): void {
+    export function setPixelRGB(offset: number, red: number, green: number, blue: number): void {
         offset *= 3
         _buffer[offset + 0] = green;
         _buffer[offset + 1] = red;
         _buffer[offset + 2] = blue;
     }
 
-    export function setPixelRGB(pixel: number, rgb: number): void {
+    export function setPixelColor(pixel: number, color: Color): void {
         if (pixel < 0 || pixel >= 8)
             return;
-        let red = (rgb >> 16) & 0xFF;
-        let green = (rgb >> 8) & 0xFF;
-        let blue = (rgb) & 0xFF;
-        setPixel(pixel, red, green, blue)
+        let RGB = rgb(color)
+        let red = (RGB >> 16) & 0xFF;
+        let green = (RGB >> 8) & 0xFF;
+        let blue = (RGB) & 0xFF;
+        setPixelRGB(pixel, red, green, blue)
     }
 
-    export function setRing(red: number, green: number, blue: number) {
+    export function setRGB(red: number, green: number, blue: number) {
         for (let i = 0; i < 8; ++i)
-            setPixel(i, red, green, blue)
+            setPixelRGB(i, red, green, blue)
+        displaySendBuffer(_buffer, _pin)
     }
 
-    export function setRingRGB(rgb: number) {
-        let red = (rgb >> 16) & 0xFF;
-        let green = (rgb >> 8) & 0xFF;
-        let blue = (rgb) & 0xFF;
+    export function setColor(color: Color) {
+        let RGB = rgb(color)
+        let red = (RGB >> 16) & 0xFF;
+        let green = (RGB >> 8) & 0xFF;
+        let blue = (RGB) & 0xFF;
         for (let i = 0; i < 8; ++i)
-            setPixel(i, red, green, blue)
+            setPixelRGB(i, red, green, blue)
+        displaySendBuffer(_buffer, _pin)
     }
 
     export function setClear(): void {
@@ -87,24 +91,24 @@ namespace LedRing {
 
     export function rainbow(rot: Rotation) {
         if (rot == Rotation.Clockwise) {
-            setPixelRGB(0, rgb(Color.Red))
-            setPixelRGB(1, rgb(Color.Orange))
-            setPixelRGB(2, rgb(Color.Yellow))
-            setPixelRGB(3, rgb(Color.Green))
-            setPixelRGB(4, rgb(Color.Blue))
-            setPixelRGB(5, rgb(Color.Indigo))
-            setPixelRGB(6, rgb(Color.Violet))
-            setPixelRGB(7, rgb(Color.Purple))
+            setPixelColor(0, Color.Red)
+            setPixelColor(1, Color.Orange)
+            setPixelColor(2, Color.Yellow)
+            setPixelColor(3, Color.Green)
+            setPixelColor(4, Color.Blue)
+            setPixelColor(5, Color.Indigo)
+            setPixelColor(6, Color.Violet)
+            setPixelColor(7, Color.Purple)
         }
         else {
-            setPixelRGB(7, rgb(Color.Red))
-            setPixelRGB(6, rgb(Color.Orange))
-            setPixelRGB(5, rgb(Color.Yellow))
-            setPixelRGB(4, rgb(Color.Green))
-            setPixelRGB(3, rgb(Color.Blue))
-            setPixelRGB(2, rgb(Color.Indigo))
-            setPixelRGB(1, rgb(Color.Violet))
-            setPixelRGB(0, rgb(Color.Purple))
+            setPixelColor(7, Color.Red)
+            setPixelColor(6, Color.Orange)
+            setPixelColor(5, Color.Yellow)
+            setPixelColor(4, Color.Green)
+            setPixelColor(3, Color.Blue)
+            setPixelColor(2, Color.Indigo)
+            setPixelColor(1, Color.Violet)
+            setPixelColor(0, Color.Purple)
         }
         showBuffer()
         basic.pause(_pace)
@@ -124,25 +128,25 @@ namespace LedRing {
         showBuffer()
         for (let i = 7; i >= 0; i--) {
             if (dir == Rotation.Clockwise)
-                setPixel(7 - i, red, green, blue)
+                setPixelRGB(7 - i, red, green, blue)
             else
-                setPixel(i, red, green, blue)
+                setPixelRGB(i, red, green, blue)
             showBuffer()
             basic.pause(_pace)
         }
         showBuffer()
         for (let i = 6; i >= 0; i--) {
             if (dir == Rotation.Clockwise)
-                setPixel(7 - i, 0, 0, 0)
+                setPixelRGB(7 - i, 0, 0, 0)
             else
-                setPixel(i, 0, 0, 0)
+                setPixelRGB(i, 0, 0, 0)
             showBuffer()
             basic.pause(_pace)
         }
         if (dir == Rotation.Clockwise)
-            setPixel(0, 0, 0, 0)
+            setPixelRGB(0, 0, 0, 0)
         else
-            setPixel(7, 0, 0, 0)
+            setPixelRGB(7, 0, 0, 0)
         showBuffer()
     }
 }
